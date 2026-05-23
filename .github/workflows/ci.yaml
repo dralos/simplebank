@@ -37,10 +37,9 @@ jobs:
       
       - name: install go migrate
         run: |
-          mkdir -p ./migrate-bin
-          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.19.1/migrate.linux-amd64.tar.gz | tar xvz -C ./migrate-bin
-          sudo mv ./migrate-bin /usr/local/bin/migrate
-          which migrate
+          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.19.1/migrate.linux-amd64.tar.gz | tar xvz -C /usr/local/bin
+          which migrate 
+          
       - name: Run Migration
         run: make migrateup
 
