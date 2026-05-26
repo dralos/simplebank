@@ -12,8 +12,8 @@ import (
 	mockdb "github.com/dralos/simplebank/db/mock"
 	db "github.com/dralos/simplebank/db/sqlc"
 	"github.com/dralos/simplebank/util"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 func TestGetAccountAPI(t *testing.T) {
@@ -110,6 +110,18 @@ func requireBodyMatchAccount(t *testing.T, body *httptest.ResponseRecorder, acco
 	require.Equal(t, account.Owner, gotAccount.Owner)
 	require.Equal(t, account.Balance, gotAccount.Balance)
 	require.Equal(t, account.Currency, gotAccount.Currency)
+}
+
+func requireBodyMatchUser(t *testing.T, body *httptest.ResponseRecorder, user db.User) {
+	data, err := io.ReadAll(body.Body)
+	require.NoError(t, err)
+
+	var gotUser createUserResponse
+	err = json.Unmarshal(data, &gotUser)
+	require.NoError(t, err)
+	require.Equal(t, user.Username, gotUser.Username)
+	require.Equal(t, user.FullName, gotUser.FullName)
+	require.Equal(t, user.Email, gotUser.Email)
 }
 
 func randomAccount() db.Account {
