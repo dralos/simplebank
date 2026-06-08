@@ -86,7 +86,7 @@ func TestGetAccountAPI(t *testing.T) {
 			store := mockdb.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server := NewServer(store)
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
 			url := fmt.Sprintf("/accounts/%d", tc.accountID)
@@ -116,7 +116,7 @@ func requireBodyMatchUser(t *testing.T, body *httptest.ResponseRecorder, user db
 	data, err := io.ReadAll(body.Body)
 	require.NoError(t, err)
 
-	var gotUser createUserResponse
+	var gotUser userResponse
 	err = json.Unmarshal(data, &gotUser)
 	require.NoError(t, err)
 	require.Equal(t, user.Username, gotUser.Username)

@@ -121,7 +121,7 @@ func TestCreateUserAPI(t *testing.T) {
 			store := mockdb.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server := NewServer(store)
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
 			data, err := json.Marshal(tc.body)
@@ -148,7 +148,7 @@ func TestCreateUserDoesNotLeakPassword(t *testing.T) {
 		},
 	)
 
-	server := NewServer(store)
+	server := newTestServer(t, store)
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(http.MethodPost, "/users", bytes.NewBufferString(`{"username":"alice123","password":"secret123","full_name":"Alice","email":"alice@example.com"}`))
 	request.Header.Set("Content-Type", "application/json")

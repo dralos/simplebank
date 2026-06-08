@@ -3,7 +3,7 @@ postgres:
 createdb:
 	docker exec -it postgres18 createdb --username=app_user --owner=app_user simple_bank
 dropdb:
-	docker exec -it postgres18 dropdb simple_bank
+	docker exec -it postgres18 dropdb --username=app_user simple_bank 
 migrateup:
 	migrate -path db/migration -database "postgresql://app_user:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up
 migrateup1:

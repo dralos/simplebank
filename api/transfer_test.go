@@ -137,7 +137,7 @@ func TestCreateTransferAPI(t *testing.T) {
 			store := mockdb.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server := NewServer(store)
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 			request := httptest.NewRequest(http.MethodPost, "/transfers", bytes.NewBufferString(tc.body))
 			request.Header.Set("Content-Type", "application/json")
