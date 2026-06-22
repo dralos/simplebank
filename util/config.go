@@ -7,11 +7,11 @@ import (
 )
 
 type Config struct {
-	DBDriver            string        `env:"DBDRIVER" envDefault:"postgres"`
-	DBSource            string        `env:"DBSOURCE" envDefault:"postgresql://app_user:secret@localhost:5432/simple_bank?sslmode=disable"`
-	ServerAddress       string        `env:"SERVERADDRESS" envDefault:"0.0.0.0:8080"`
-	TokenSymmetricKey   string        `env:"TOKENSYMMETRICKEY" envDefault:"a_random_symmetric_key_123456789"`
-	AccessTokenDuration time.Duration `env:"ACCESSTOKENDURATION" envDefault:"15m"`
+	DBDriver            string        `mapstructure:"DB_DRIVER"`
+	DBSource            string        `mapstructure:"DB_SOURCE"`
+	ServerAddress       string        `mapstructure:"SERVER_ADDRESS"`
+	TokenSymmetricKey   string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
+	AccessTokenDuration time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
 }
 
 func LoadConfig(path string) (config Config, err error) {
@@ -21,9 +21,10 @@ func LoadConfig(path string) (config Config, err error) {
 
 	viper.AutomaticEnv()
 
-	err = viper.ReadInConfig()
-	if err != nil {
-		return
+	if err = viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+			return // return if it's a real error, ignore if file just wasn't found
+		}
 	}
 
 	err = viper.Unmarshal(&config)
